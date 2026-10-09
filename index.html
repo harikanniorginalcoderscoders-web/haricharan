@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101713">
+    <meta name="description" content="Discover smart-home technology and ideas for smarter living.">
+    <title>SMARTHOMZ — Discover Smarter Living</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        [hidden] {
+            display: none !important
+        }
+
+        :root {
+            --mint: #a5f3c7;
+            --dark: #101713;
+            --panel: #17211b
+        }
+
+        body {
+            margin: 0;
+            background: var(--dark);
+            color: #f1f6f2;
+            font-family: "DM Sans", sans-serif
+        }
+
+        a {
+            color: inherit
+        }
+
+        button,
+        input {
+            font: inherit
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 36px));
+            margin: auto
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #101713ee;
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid #ffffff15
+        }
+
+        .nav {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: relative
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font: 800 1rem Manrope, sans-serif;
+            letter-spacing: .08em
+        }
+
+        .brand svg {
+            width: 35px;
+            color: var(--mint)
+        }
+
+        .brand span span {
+            color: var(--mint)
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 23px
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            opacity: .76;
+            font-size: .9rem;
+            transition: .25s
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            opacity: 1;
+            color: var(--mint)
+        }
+
+        .menu-button {
+            display: none;
+            width: 42px;
+            height: 42px;
+            color: inherit;
+            border: 1px solid #ffffff2c;
+            border-radius: 50%;
+            background: transparent
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 20px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .25s, background .25s;
+            border: 1px solid transparent
+        }
+
+        .button:hover {
+            transform: translateY(-3px)
+        }
+
+        .primary {
+            background: var(--mint);
+            color: #102017;
+            border-color: var(--mint)
+        }
+
+        .secondary {
+            background: transparent;
+            color: inherit;
+            border-color: #ffffff35
+        }
+
+        .eyebrow {
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .15em;
+            text-transform: uppercase
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--mint);
+            margin-right: 8px;
+            box-shadow: 0 0 15px #a5f3c788
+        }
+
+        .gradient {
+            background: linear-gradient(110deg, #a5f3c7, #6edca1, #e0ffe9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .view {
+            animation: viewIn .45s ease both
+        }
+
+        @keyframes viewIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .hero {
+            min-height: 560px;
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            align-items: center;
+            gap: 25px;
+            padding: 45px 0
+        }
+
+        .hero h1 {
+            font: 800 clamp(2.8rem, 6vw, 5.3rem)/1.04 Manrope, sans-serif;
+            letter-spacing: -.065em;
+            margin: 20px 0
+        }
+
+        .hero-copy {
+            max-width: 540px;
+            line-height: 1.9;
+            opacity: .76
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px
+        }
+
+        .note {
+            margin-top: 25px;
+            opacity: .65;
+            font-size: .85rem
+        }
+
+        .visual {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 410px;
+            overflow: hidden
+        }
+
+        .glow {
+            position: absolute;
+            width: 70%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #4ac98720;
+            filter: blur(55px)
+        }
+
+        .orbit {
+            position: absolute;
+            width: 80%;
+            aspect-ratio: 1;
+            border: 1px solid #a5f3c722;
+            border-radius: 50%;
+            animation: pulse 6s ease-in-out infinite
+        }
+
+        .orbit.second {
+            width: 100%;
+            animation-delay: -3s
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(.92);
+                opacity: .4
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1
+            }
+        }
+
+        .house {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px
+        }
+
+        .house svg {
+            width: 100%;
+            height: auto
+        }
+
+        .floating {
+            position: absolute;
+            z-index: 2;
+            padding: 13px;
+            border: 1px solid #ffffff20;
+            border-radius: 14px;
+            background: #17231ded;
+            box-shadow: 0 18px 50px #0004;
+            font-size: .82rem;
+            animation: float 5s ease-in-out infinite
+        }
+
+        .floating small {
+            display: block;
+            margin-top: 4px;
+            opacity: .65
+        }
+
+        .floating.top {
+            left: 0;
+            top: 16%
+        }
+
+        .floating.bottom {
+            right: 0;
+            bottom: 12%;
+            animation-delay: -2.5s
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-9px)
+            }
+        }
+
+        .intro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 25px;
+            padding: 32px;
+            border: 1px solid #ffffff16;
+            border-radius: 22px;
+            background: #ffffff04
+        }
+
+        .intro h2,
+        .section-heading h2,
+        .editorial h2,
+        .final h2 {
+            font: 800 clamp(1.8rem, 4vw, 3.1rem)/1.15 Manrope, sans-serif;
+            letter-spacing: -.045em;
+            margin: 12px 0
+        }
+
+        .intro p,
+        .section-heading p,
+        .editorial p,
+        .final p {
+            line-height: 1.8;
+            opacity: .72
+        }
+
+        .section {
+            padding: 70px 0 25px
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 20px;
+            margin-bottom: 27px
+        }
+
+        .section-heading p {
+            margin-bottom: 0
+        }
+
+        .text-link {
+            color: var(--mint);
+            text-decoration: none;
+            font-weight: 700;
+            white-space: nowrap
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px
+        }
+
+        .category-card {
+            position: relative;
+            min-height: 205px;
+            padding: 22px;
+            text-decoration: none;
+            border: 1px solid #ffffff17;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #20352a, #121b16);
+            transition: transform .3s, border-color .3s, box-shadow .3s
+        }
+
+        .category-card:hover {
+            transform: translateY(-7px);
+            border-color: #a5f3c75e;
+            box-shadow: 0 20px 50px #0003
+        }
+
+        .category-card .number {
+            font-size: .75rem;
+            opacity: .5
+        }
+
+        .category-card .symbol {
+            margin: 20px 0;
+            color: var(--mint);
+            font-size: 2rem
+        }
+
+        .category-card h3 {
+            margin: 0 0 9px
+        }
+
+        .category-card p {
+            font-size: .85rem;
+            line-height: 1.65;
+            opacity: .68
+        }
+
+        .category-card .arrow {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: var(--mint)
+        }
+
+        .search {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px 17px;
+            color: inherit;
+            border: 1px solid #ffffff24;
+            border-radius: 13px;
+            background: #ffffff07;
+            outline: none
+        }
+
+        .search:focus {
+            border-color: var(--mint)
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin: 17px 0 25px
+        }
+
+        .chip {
+            padding: 9px 14px;
+            color: inherit;
+            border: 1px solid #ffffff25;
+            border-radius: 999px;
+            background: transparent;
+            cursor: pointer;
+            transition: .2s
+        }
+
+        .chip.active,
+        .chip:hover {
+            color: #102017;
+            border-color: var(--mint);
+            background: var(--mint)
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 21px
+        }
+
+        .product-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid #ffffff17;
+            border-radius: 20px;
+            background: var(--panel);
+            animation: cardIn .5s both;
+            animation-delay: calc(var(--i, 0)*65ms);
+            transition: transform .3s, border-color .3s, box-shadow .3s
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(.98)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1)
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: #a5f3c760;
+            box-shadow: 0 20px 55px #0003
+        }
+
+        .product-link {
+            display: block;
+            color: inherit;
+            text-decoration: none
+        }
+
+        .product-media {
+            height: 235px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 40%, #315540, #111a14 75%)
+        }
+
+        .product-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .65s
+        }
+
+        .product-card:hover .product-media img {
+            transform: scale(1.08)
+        }
+
+        .image-fallback {
+            height: 100%;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            color: var(--mint);
+            font-size: .75rem;
+            letter-spacing: .2em
+        }
+
+        .image-fallback b {
+            font-size: 3rem;
+            display: block;
+            margin-top: 10px
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: #111a14dd;
+            font-size: .66rem;
+            letter-spacing: .08em
+        }
+
+        .product-arrow {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: #102017;
+            background: var(--mint);
+            transition: transform .25s
+        }
+
+        .product-card:hover .product-arrow {
+            transform: rotate(45deg)
+        }
+
+        .product-body {
+            padding: 20px
+        }
+
+        .product-category {
+            color: var(--mint);
+            font-size: .76rem
+        }
+
+        .product-body h3 {
+            margin: 9px 0
+        }
+
+        .product-body p {
+            font-size: .87rem;
+            line-height: 1.7;
+            opacity: .7;
+            min-height: 48px
+        }
+
+        .product-details-link {
+            font-size: .85rem;
+            font-weight: 700
+        }
+
+        .status {
+            padding: 40px 20px;
+            text-align: center;
+            border: 1px dashed #ffffff2b;
+            border-radius: 20px
+        }
+
+        .status p {
+            max-width: 560px;
+            margin: 12px auto 20px;
+            line-height: 1.8;
+            opacity: .7
+        }
+
+        .skeleton {
+            height: 350px;
+            border-radius: 20px;
+            background: linear-gradient(100deg, #17211b 25%, #24372b 45%, #17211b 65%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: -200% 0
+            }
+        }
+
+        .editorial {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 30px;
+            padding: 38px;
+            overflow: hidden;
+            border: 1px solid #ffffff18;
+            border-radius: 25px;
+            background: linear-gradient(130deg, #1d3527, #121a15)
+        }
+
+        .editorial p {
+            max-width: 540px
+        }
+
+        .art {
+            position: relative;
+            min-height: 240px;
+            display: grid;
+            place-items: center
+        }
+
+        .ring {
+            position: absolute;
+            width: 220px;
+            aspect-ratio: 1;
+            border: 1px solid #a5f3c74a;
+            border-radius: 50%;
+            animation: pulse 6s infinite
+        }
+
+        .ring:nth-child(2) {
+            width: 170px;
+            animation-delay: -2s
+        }
+
+        .ring:nth-child(3) {
+            width: 120px;
+            animation-delay: -4s
+        }
+
+        .art strong {
+            font: 800 2rem Manrope;
+            color: var(--mint)
+        }
+
+        .page-title {
+            padding: 60px 0 25px
+        }
+
+        .page-title h1 {
+            font: 800 clamp(2.5rem, 6vw, 4.5rem)/1.1 Manrope, sans-serif;
+            letter-spacing: -.06em;
+            margin: 14px 0
+        }
+
+        .page-title p {
+            max-width: 680px;
+            line-height: 1.8;
+            opacity: .72
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start
+        }
+
+        .detail-image {
+            min-height: 350px;
+            overflow: hidden;
+            border: 1px solid #ffffff18;
+            border-radius: 24px;
+            background: radial-gradient(circle at center, #2b4c38, #121a15 75%)
+        }
+
+        .detail-image img {
+            display: block;
+            width: 100%;
+            min-height: 350px;
+            object-fit: cover
+        }
+
+        .detail-copy h1 {
+            font: 800 clamp(2rem, 5vw, 3.6rem)/1.1 Manrope, sans-serif;
+            letter-spacing: -.05em
+        }
+
+        .detail-copy p {
+            line-height: 1.9;
+            opacity: .76
+        }
+
+        .detail-copy h3 {
+            margin-top: 26px
+        }
+
+        .detail-copy ul {
+            padding-left: 20px;
+            line-height: 2;
+            opacity: .8
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px
+        }
+
+        .about-card {
+            padding: 28px;
+            border: 1px solid #ffffff18;
+            border-radius: 20px;
+            background: #ffffff04
+        }
+
+        .about-card p {
+            line-height: 1.9;
+            opacity: .74
+        }
+
+        .final {
+            text-align: center;
+            padding: 80px 20px
+        }
+
+        .footer {
+            padding: 30px 0 20px;
+            border-top: 1px solid #ffffff18;
+            margin-top: 35px
+        }
+
+        .footer-top,
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap
+        }
+
+        .footer a {
+            text-decoration: none;
+            opacity: .75;
+            font-size: .86rem
+        }
+
+        .footer-bottom {
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid #ffffff12;
+            font-size: .8rem;
+            opacity: .6
+        }
+
+        .detail-enter {
+            animation: circleOpen .7s cubic-bezier(.16, 1, .3, 1) both
+        }
+
+        @keyframes circleOpen {
+            from {
+                clip-path: circle(0% at 50% 45%);
+                opacity: .4
+            }
+
+            to {
+                clip-path: circle(150% at 50% 45%);
+                opacity: 1
+            }
+        }
+
+        .curtain {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--dark);
+            transition: opacity .5s, visibility .5s
+        }
+
+        .curtain.hide {
+            opacity: 0;
+            visibility: hidden
+        }
+
+        .curtain-circle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--mint);
+            transform: scale(0);
+            animation: expand .9s cubic-bezier(.16, 1, .3, 1) forwards
+        }
+
+        .curtain-brand {
+            z-index: 1;
+            color: #102017;
+            font: 800 clamp(1.4rem, 4vw, 2.5rem) Manrope, sans-serif;
+            letter-spacing: .12em
+        }
+
+        .curtain-brand span {
+            color: #315d43
+        }
+
+        @keyframes expand {
+            to {
+                transform: scale(120)
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .65s, transform .65s
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        @media(max-width:900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 40px 0
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .products {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .intro,
+            .editorial,
+            .detail-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:640px) {
+            .container {
+                width: calc(100% - 30px)
+            }
+
+            .menu-button {
+                display: block
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 0;
+                right: 0;
+                padding: 20px;
+                border: 1px solid #ffffff20;
+                border-radius: 17px;
+                background: #121b16;
+                box-shadow: 0 25px 55px #0006
+            }
+
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 18px
+            }
+
+            .hero h1 {
+                font-size: clamp(2.7rem, 13vw, 4rem)
+            }
+
+            .visual {
+                min-height: 300px
+            }
+
+            .intro,
+            .editorial {
+                padding: 22px
+            }
+
+            .section {
+                padding-top: 50px
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column
+            }
+
+            .category-grid,
+            .products,
+            .about-grid {
+                grid-template-columns: 1fr
+            }
+
+            .category-card {
+                min-height: 180px
+            }
+
+            .product-media {
+                height: 250px
+            }
+
+            .footer-top,
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="curtain" id="curtain" aria-hidden="true">
+        <div class="curtain-circle"></div>
+        <div class="curtain-brand">SMART<span>HOMZ</span></div>
+    </div>
+
+    <header class="header">
+        <nav class="nav container" aria-label="Main navigation">
+            <a href="#home" class="brand" data-route="home">
+                <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                    <path d="M5 18.5 20 6l15 12.5V34H5V18.5Z" stroke="currentColor" stroke-width="2.2"
+                        stroke-linejoin="round" />
+                    <path d="M14 34V22h12v12" stroke="currentColor" stroke-width="2.2" />
+                    <circle cx="30" cy="9" r="3" fill="#A5F3C7" />
+                </svg>
+                <span>SMART<span>HOMZ</span></span>
+            </a>
+            <button class="menu-button" id="menuButton" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="#home" data-route="home" class="active">Home</a>
+                <a href="#explore" data-route="explore">Explore</a>
+                <a href="#categories" data-route="categories">Categories</a>
+                <a href="#about" data-route="about">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- HOME -->
+        <section id="view-home" class="app-view">
+            <section class="hero">
+                <div class="hero-copy reveal">
+                    <div class="eyebrow"><span class="dot"></span>THE FUTURE OF EVERYDAY LIVING</div>
+                    <h1>Your home.<br>Your world.<br><span class="gradient">A little smarter.</span></h1>
+                    <p class="hero-copy">Explore technology that makes your home more intelligent, comfortable, secure
+                        and beautifully connected. Discover what's possible with SMARTHOMZ.</p>
+                    <div class="actions">
+                        <a href="#explore" data-route="explore" class="button primary">Explore smart tech ↗</a>
+                        <a href="#categories" data-route="categories" class="button secondary">Browse categories</a>
+                    </div>
+                    <p class="note">✳ &nbsp;Discover ideas. Understand technology. Live smarter.</p>
+                </div>
+                <div class="visual reveal" aria-label="Illustration of a connected smart home">
+                    <div class="glow"></div>
+                    <div class="orbit"></div>
+                    <div class="orbit second"></div>
+                    <div class="house">
+                        <svg viewBox="0 0 500 440" role="img" aria-label="Modern connected home illustration">
+                            <defs>
+                                <linearGradient id="houseG" x1="80" y1="60" x2="400" y2="390">
+                                    <stop stop-color="#244b3a" />
+                                    <stop offset="1" stop-color="#111c17" />
+                                </linearGradient>
+                                <linearGradient id="windowG">
+                                    <stop stop-color="#b6f7d0" />
+                                    <stop offset="1" stop-color="#367d59" />
+                                </linearGradient>
+                            </defs>
+                            <ellipse cx="255" cy="376" rx="175" ry="22" fill="#8af0b7" opacity=".12" />
+                            <path d="M65 195 250 50 435 195" fill="none" stroke="#8decb5" stroke-width="2" />
+                            <path d="M95 184 250 70 405 184V347H95V184Z" fill="url(#houseG)" stroke="#6cc995"
+                                stroke-opacity=".6" stroke-width="1.5" />
+                            <path d="M250 70 405 184V347H250V70Z" fill="#0e1712" opacity=".45" />
+                            <rect x="125" y="211" width="83" height="82" rx="3" fill="url(#windowG)" />
+                            <rect x="135" y="221" width="63" height="62" fill="#173d2c" />
+                            <path d="M166.5 221V283M135 252H198" stroke="#8decb5" stroke-width="2" />
+                            <rect x="291" y="211" width="83" height="82" rx="3" fill="url(#windowG)" />
+                            <rect x="301" y="221" width="63" height="62" fill="#173d2c" />
+                            <path d="M332.5 221V283M301 252H364" stroke="#8decb5" stroke-width="2" />
+                            <rect x="213" y="272" width="74" height="75" rx="3" fill="#1d382b" stroke="#74dba0"
+                                stroke-opacity=".65" />
+                            <circle cx="273" cy="310" r="3" fill="#a5f3c7" />
+                            <path d="M105 347H395" stroke="#8decb5" stroke-opacity=".6" stroke-width="2" />
+                            <circle cx="250" cy="49" r="5" fill="#a5f3c7" />
+                            <circle cx="250" cy="49" r="13" stroke="#a5f3c7" stroke-opacity=".3" />
+                            <path d="M250 20V7M224 28 215 19M276 28 285 19" stroke="#a5f3c7" stroke-width="2"
+                                stroke-linecap="round" />
+                            <circle cx="92" cy="112" r="22" fill="#1d3328" stroke="#8decb5" stroke-opacity=".65" />
+                            <path d="M81 112h22M92 101v22" stroke="#a5f3c7" stroke-width="2" stroke-linecap="round" />
+                            <circle cx="410" cy="262" r="24" fill="#1d3328" stroke="#8decb5" stroke-opacity=".65" />
+                            <path d="M402 262a8 8 0 1 1 16 0v7h-16v-7ZM405 269v4h10v-4" fill="none" stroke="#a5f3c7"
+                                stroke-width="1.8" />
+                        </svg>
+                    </div>
+                    <div class="floating top">⌁ &nbsp;<strong>Connected living</strong><small>Technology meets
+                            comfort</small></div>
+                    <div class="floating bottom">🟢 &nbsp;<strong>Smarter by design</strong><small>Made for everyday
+                            life</small></div>
+                </div>
+            </section>
+
+            <section class="intro reveal">
+                <div><span class="eyebrow">A BETTER WAY TO DISCOVER</span>
+                    <h2>Technology should make life feel simpler.</h2>
+                </div>
+                <p>From small everyday upgrades to whole-home automation, explore the devices and ideas shaping modern
+                    living.</p>
+            </section>
+
+            <section class="section">
+                <div class="section-heading reveal">
+                    <div><span class="eyebrow">EXPLORE YOUR POSSIBILITIES</span>
+                        <h2>Find your kind of <span class="gradient">smart.</span></h2>
+                        <p>Discover technology by the way you want to live.</p>
+                    </div><a class="text-link" href="#categories" data-route="categories">All categories ↗</a>
+                </div>
+                <div class="category-grid">
+                    <a class="category-card reveal" href="#explore" data-route="explore" data-category="Lighting"><span
+                            class="number">01</span><span class="arrow">↗</span>
+                        <div class="symbol">☼</div>
+                        <h3>Smart Lighting</h3>
+                        <p>Shape the atmosphere of every room with intelligent lighting.</p>
+                    </a>
+                    <a class="category-card reveal" href="#explore" data-route="explore" data-category="Security"><span
+                            class="number">02</span><span class="arrow">↗</span>
+                        <div class="symbol">⌑</div>
+                        <h3>Home Security</h3>
+                        <p>Explore connected cameras, sensors and smarter protection.</p>
+                    </a>
+                    <a class="category-card reveal" href="#explore" data-route="explore"
+                        data-category="Automation"><span class="number">03</span><span class="arrow">↗</span>
+                        <div class="symbol">⌘</div>
+                        <h3>Automation</h3>
+                        <p>Discover devices that help everyday routines flow naturally.</p>
+                    </a>
+                    <a class="category-card reveal" href="#explore" data-route="explore"
+                        data-category="Entertainment"><span class="number">04</span><span class="arrow">↗</span>
+                        <div class="symbol">◉</div>
+                        <h3>Entertainment</h3>
+                        <p>Explore connected audio, displays and immersive experiences.</p>
+                    </a>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-heading reveal">
+                    <div><span class="eyebrow">SELECTED FOR SMARTER LIVING</span>
+                        <h2>Discover what's <span class="gradient">possible.</span></h2>
+                        <p>Explore published products from our collection.</p>
+                    </div><a class="text-link" href="#explore" data-route="explore">Explore all ↗</a>
+                </div>
+                <div class="products" id="featuredProducts">
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                </div>
+                <div class="status" id="featuredStatus" hidden>
+                    <h3 id="featuredStatusTitle">No products yet</h3>
+                    <p id="featuredStatusMessage">Published products will appear here when available.</p><button
+                        class="button secondary" id="featuredRetry" hidden>Try again</button>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="editorial reveal">
+                    <div><span class="eyebrow">THOUGHTFUL TECHNOLOGY</span>
+                        <h2>Less complexity.<br><span class="gradient">More possibility.</span></h2>
+                        <p>The best technology isn't just impressive. It's useful, intuitive and designed around real
+                            life. We're here to help you discover the difference.</p><a href="#about" data-route="about"
+                            class="button primary">Get to know SMARTHOMZ ↗</a>
+                    </div>
+                    <div class="art" aria-hidden="true">
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring"></div><strong>SH</strong>
+                    </div>
+                </div>
+            </section>
+            <section class="final reveal"><span class="eyebrow">YOUR NEXT DISCOVERY STARTS HERE</span>
+                <h2>Make room for <span class="gradient">smarter living.</span></h2>
+                <p>Explore ideas and technology for the home you're imagining.</p><a href="#explore"
+                    data-route="explore" class="button primary">Start exploring ↗</a>
+            </section>
+        </section>
+
+        <!-- EXPLORE -->
+        <section id="view-explore" class="app-view" hidden>
+            <div class="page-title reveal"><span class="eyebrow">THE SMARTER LIVING COLLECTION</span>
+                <h1>Explore <span class="gradient">technology.</span></h1>
+                <p>Discover connected devices and home innovations. Select a product to learn about its features,
+                    strengths and limitations.</p>
+            </div>
+            <label for="productSearch" class="eyebrow">SEARCH PRODUCTS</label>
+            <input id="productSearch" class="search" type="search"
+                placeholder="Search names, categories or descriptions..." autocomplete="off">
+            <div class="filters" id="exploreFilters"></div>
+            <div class="products" id="exploreProducts"></div>
+            <div class="status" id="exploreStatus" hidden>
+                <h3 id="exploreStatusTitle">No products found</h3>
+                <p id="exploreStatusMessage">Try another search or category.</p><button id="exploreRetry"
+                    class="button secondary" hidden>Try again</button>
+            </div>
+        </section>
+
+        <!-- PRODUCT DETAILS -->
+        <section id="view-product" class="app-view" hidden>
+            <div class="page-title"><button class="button secondary" id="backToExplore">← Back</button></div>
+            <div id="productDetails" class="detail-grid detail-enter"></div>
+            <div class="status" id="detailStatus" hidden>
+                <h3 id="detailStatusTitle">Product unavailable</h3>
+                <p id="detailStatusMessage">This product may have been unpublished or removed.</p><button
+                    class="button primary" data-route="explore">Explore products</button>
+            </div>
+        </section>
+
+        <!-- CATEGORIES -->
+        <section id="view-categories" class="app-view" hidden>
+            <div class="page-title reveal"><span class="eyebrow">EXPLORE BY INTEREST</span>
+                <h1>Find your <span class="gradient">category.</span></h1>
+                <p>Start with what matters to your home, then discover products that fit your interests.</p>
+            </div>
+            <div class="category-grid">
+                <a class="category-card" href="#explore" data-route="explore" data-category="Lighting"><span
+                        class="number">01 / LIGHT</span><span class="arrow">↗</span>
+                    <div class="symbol">☼</div>
+                    <h3>Smart Lighting</h3>
+                    <p>Connected bulbs, lighting controls and ambience.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Security"><span
+                        class="number">02 / PROTECT</span><span class="arrow">↗</span>
+                    <div class="symbol">⌑</div>
+                    <h3>Home Security</h3>
+                    <p>Smart cameras, sensors and monitoring devices.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Automation"><span
+                        class="number">03 / SIMPLIFY</span><span class="arrow">↗</span>
+                    <div class="symbol">⌘</div>
+                    <h3>Automation</h3>
+                    <p>Smart switches, plugs and everyday routines.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Entertainment"><span
+                        class="number">04 / ENJOY</span><span class="arrow">↗</span>
+                    <div class="symbol">◉</div>
+                    <h3>Entertainment</h3>
+                    <p>Connected audio, displays and media experiences.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Climate"><span
+                        class="number">05 / COMFORT</span><span class="arrow">↗</span>
+                    <div class="symbol">❋</div>
+                    <h3>Climate & Comfort</h3>
+                    <p>Explore connected climate and comfort controls.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Sensors"><span
+                        class="number">06 / AWARENESS</span><span class="arrow">↗</span>
+                    <div class="symbol">⌁</div>
+                    <h3>Sensors</h3>
+                    <p>Discover sensors that help your home respond.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Networking"><span
+                        class="number">07 / CONNECT</span><span class="arrow">↗</span>
+                    <div class="symbol">⌘</div>
+                    <h3>Connectivity</h3>
+                    <p>Explore devices that connect your smart home.</p>
+                </a>
+                <a class="category-card" href="#explore" data-route="explore" data-category="Other"><span
+                        class="number">08 / MORE</span><span class="arrow">↗</span>
+                    <div class="symbol">✳</div>
+                    <h3>More discoveries</h3>
+                    <p>Browse other useful home technology.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="view-about" class="app-view" hidden>
+            <div class="page-title reveal"><span class="eyebrow">ABOUT SMARTHOMZ</span>
+                <h1>A more thoughtful way to discover <span class="gradient">smart living.</span></h1>
+                <p>Technology can be exciting, but choosing the right technology starts with understanding what it does
+                    and how it fits into everyday life.</p>
+            </div>
+            <div class="about-grid">
+                <article class="about-card"><span class="eyebrow">OUR PURPOSE</span>
+                    <h2>Make discovery simpler.</h2>
+                    <p>SMARTHOMZ is a place to explore smart-home devices, learn what they do, and compare their useful
+                        features and limitations before deciding what belongs in your home.</p>
+                </article>
+                <article class="about-card"><span class="eyebrow">OUR APPROACH</span>
+                    <h2>Clarity over complexity.</h2>
+                    <p>We focus on product information, practical descriptions and straightforward exploration. The goal
+                        is to help visitors understand technology, not pressure them into a purchase.</p>
+                </article>
+                <article class="about-card"><span class="eyebrow">WHAT YOU'LL FIND</span>
+                    <h2>Connected home ideas.</h2>
+                    <p>Explore lighting, home security, automation, entertainment, sensors and other categories. Product
+                        listings come from the SMARTHOMZ database.</p>
+                </article>
+                <article class="about-card"><span class="eyebrow">OUR PRINCIPLE</span>
+                    <h2>Your home, your choices.</h2>
+                    <p>Learn about a product's capabilities, features, advantages and trade-offs so you can make
+                        informed decisions for your needs.</p>
+                </article>
+            </div>
+            <section class="final"><span class="eyebrow">READY TO DISCOVER?</span>
+                <h2>Start with <span class="gradient">what matters to you.</span></h2><a href="#categories"
+                    data-route="categories" class="button primary">Browse categories ↗</a>
+            </section>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-top">
+                <a href="#home" data-route="home" class="brand"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                        <path d="M5 18.5 20 6l15 12.5V34H5V18.5Z" stroke="currentColor" stroke-width="2.2" />
+                        <circle cx="30" cy="9" r="3" fill="#A5F3C7" />
+                    </svg><span>SMART<span>HOMZ</span></span></a>
+                <div class="footer-links"><a href="#home" data-route="home">Home</a><a href="#explore"
+                        data-route="explore">Explore</a><a href="#categories" data-route="categories">Categories</a><a
+                        href="#about" data-route="about">About</a></div>
+            </div>
+            <div class="footer-bottom"><span>© <span id="year"></span> SMARTHOMZ</span><span>Discover better
+                    living.</span><a href="#home" data-route="home">Back to top ↑</a></div>
+        </footer>
+    </main>
+
+    <script>
+        /* Public frontend key only. Never place a service-role/secret key here. */
+        const SUPABASE_URL = "https://vipcjvcgeplhaywofujz.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_t5wqB6CTPSxrfVApgfD82A_eYIWIGlv";
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        const $ = (s, root = document) => root.querySelector(s);
+        const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+        const routes = ["home", "explore", "product", "categories", "about"];
+        let products = [];
+        let activeCategory = "All";
+        let previousRoute = "explore";
+        let previousScroll = 0;
+        let currentProductId = null;
+
+        $("#year").textContent = new Date().getFullYear();
+
+        window.addEventListener("load", () => {
+            setTimeout(() => $("#curtain").classList.add("hide"), 700);
+        });
+
+        function renderRoute(route, options = {}) {
+            if (!routes.includes(route)) route = "home";
+
+            routes.forEach(name => {
+                const section = $("#view-" + name);
+                section.hidden = name !== route;
+                if (name === route) {
+                    section.classList.remove("view");
+                    void section.offsetWidth;
+                    section.classList.add("view");
+                }
+            });
+
+            $$(".nav-links [data-route]").forEach(link => {
+                link.classList.toggle("active", link.dataset.route === route);
+            });
+
+            $("#navLinks").classList.remove("open");
+            $("#menuButton").setAttribute("aria-expanded", "false");
+            $("#menuButton").textContent = "☰";
+
+            if (route !== "product") previousRoute = route;
+            if (route === "explore") renderExplore();
+            if (route === "product") renderProductDetail(currentProductId);
+
+            if (options.restoreScroll) {
+                window.scrollTo({top: previousScroll, behavior: "instant"});
+            } else {
+                window.scrollTo({top: 0, behavior: "instant"});
+            }
+            observeReveals();
+        }
+
+        function navigate(route, options = {}) {
+            if (!routes.includes(route)) route = "home";
+            if (!options.fromPop && location.hash !== "#" + route) {
+                history.pushState({route}, "", "#" + route);
+            }
+            renderRoute(route, options);
+        }
+
+        document.addEventListener("click", event => {
+            const link = event.target.closest("[data-route]");
+            if (!link) return;
+            event.preventDefault();
+
+            const route = link.dataset.route;
+            if (link.dataset.category) activeCategory = link.dataset.category;
+
+            const curtain = $("#curtain");
+            curtain.classList.remove("hide");
+            const circle = $(".curtain-circle", curtain);
+            circle.style.animation = "none";
+            void circle.offsetWidth;
+            circle.style.animation = "";
+            setTimeout(() => navigate(route, {category: link.dataset.category}), 180);
+            setTimeout(() => curtain.classList.add("hide"), 650);
+        });
+
+        window.addEventListener("popstate", () => {
+            const route = location.hash.slice(1) || "home";
+            renderRoute(routes.includes(route) ? route : "home", {fromPop: true, restoreScroll: true});
+        });
+
+        $("#menuButton").addEventListener("click", () => {
+            const open = $("#navLinks").classList.toggle("open");
+            $("#menuButton").setAttribute("aria-expanded", String(open));
+            $("#menuButton").textContent = open ? "✕" : "☰";
+        });
+
+        function observeReveals() {
+            const nodes = $$(".reveal").filter(el => !el.classList.contains("visible") && !el.hidden);
+            if (!("IntersectionObserver" in window)) {
+                nodes.forEach(el => el.classList.add("visible"));
+                return;
+            }
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {threshold: .08});
+            nodes.forEach(el => observer.observe(el));
+        }
+        observeReveals();
+
+        function esc(value = "") {
+            return String(value).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+        }
+
+        function productCard(p, i = 0) {
+            const image = p.image_url
+                ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" onerror="this.hidden=true">`
+                : `<div class="image-fallback">SMARTHOMZ<b>✳</b></div>`;
+            return `<article class="product-card" style="--i:${i}">
+        <a class="product-link" href="#product" data-open-product="${esc(p.id)}" aria-label="View details for ${esc(p.name)}">
+          <div class="product-media">${image}<span class="product-badge">${p.is_featured ? "FEATURED" : "DISCOVER"}</span><span class="product-arrow" aria-hidden="true">↗</span></div>
+          <div class="product-body"><span class="product-category">${esc(p.category || "Smart Living")}</span><h3>${esc(p.name)}</h3><p>${esc(p.description || "Discover what this product can bring to your home.")}</p><span class="product-details-link">Explore details →</span></div>
+        </a></article>`;
+        }
+
+        function showStatus(prefix, title, message, retry = false) {
+            const panel = $("#" + prefix + "Status");
+            panel.hidden = false;
+            $("#" + prefix + "StatusTitle").textContent = title;
+            $("#" + prefix + "StatusMessage").textContent = message;
+            const button = $("#" + prefix + "Retry");
+            if (button) button.hidden = !retry;
+        }
+
+        async function loadProducts() {
+            $("#featuredStatus").hidden = true;
+            $("#featuredProducts").innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+
+            try {
+                const {data, error} = await db.from("products")
+                    .select("id,name,category,image_url,description,features,pros,cons,is_featured,created_at")
+                    .eq("is_published", true)
+                    .order("is_featured", {ascending: false})
+                    .order("created_at", {ascending: false})
+                    .limit(100);
+
+                if (error) throw error;
+                products = data || [];
+                const featured = products.filter(p => p.is_featured).slice(0, 3);
+                const display = featured.length ? featured : products.slice(0, 3);
+                $("#featuredProducts").innerHTML = display.map(productCard).join("");
+
+                if (!display.length) {
+                    $("#featuredProducts").innerHTML = "";
+                    showStatus("featured", "A smarter collection is taking shape.", "There are no published products yet. Publish products in your admin system to display them here.");
+                }
+                renderExplore();
+            } catch (error) {
+                console.error("Supabase product loading failed:", error);
+                $("#featuredProducts").innerHTML = "";
+                showStatus("featured", "Products couldn't load.", "Check your Supabase connection, products table and public SELECT policy.", true);
+                $("#exploreProducts").innerHTML = "";
+                showStatus("explore", "Unable to load products.", "Please check the Supabase setup and try again.", true);
+            }
+        }
+
+        function getCategories() {
+            return ["All", ...new Set(products.map(p => (p.category || "Other").trim()).filter(Boolean))];
+        }
+
+        function renderFilters() {
+            $("#exploreFilters").innerHTML = getCategories().map(category =>
+                `<button type="button" class="chip ${activeCategory.toLowerCase() === category.toLowerCase() ? "active" : ""}" data-filter="${esc(category)}">${esc(category)}</button>`
+            ).join("");
+        }
+
+        function renderExplore() {
+            if (!$("#exploreProducts")) return;
+            renderFilters();
+            const query = ($("#productSearch").value || "").trim().toLowerCase();
+
+            const filtered = products.filter(p => {
+                const categoryMatch = activeCategory === "All" || (p.category || "Other").toLowerCase() === activeCategory.toLowerCase();
+                const searchable = [p.name, p.category, p.description, ...(p.features || [])].join(" ").toLowerCase();
+                return categoryMatch && searchable.includes(query);
+            });
+
+            $("#exploreProducts").innerHTML = filtered.map(productCard).join("");
+            $("#exploreStatus").hidden = filtered.length > 0;
+            if (!filtered.length) {
+                $("#exploreStatusTitle").textContent = products.length ? "No matching products" : "No published products yet";
+                $("#exploreStatusMessage").textContent = products.length ? "Try another search term or category." : "Published products from Supabase will appear here when available.";
+                $("#exploreRetry").hidden = products.length > 0;
+            }
+        }
+
+        $("#exploreFilters").addEventListener("click", event => {
+            const button = event.target.closest("[data-filter]");
+            if (!button) return;
+            activeCategory = button.dataset.filter;
+            renderExplore();
+        });
+
+        $("#productSearch").addEventListener("input", renderExplore);
+        $("#featuredRetry").addEventListener("click", loadProducts);
+        $("#exploreRetry").addEventListener("click", loadProducts);
+
+        document.addEventListener("click", event => {
+            const link = event.target.closest("[data-open-product]");
+            if (!link) return;
+            event.preventDefault();
+
+            previousScroll = window.scrollY;
+            currentProductId = link.dataset.openProduct;
+            previousRoute = location.hash.slice(1) || "explore";
+            history.pushState({route: "product", productId: currentProductId}, "", "#product");
+            renderRoute("product");
+        });
+
+        function listItems(items) {
+            if (!Array.isArray(items) || !items.length) return "<li>More information will be added soon.</li>";
+            return items.map(item => `<li>${esc(item)}</li>`).join("");
+        }
+
+        function renderProductDetail(id) {
+            const panel = $("#detailStatus");
+            const product = products.find(p => String(p.id) === String(id));
+
+            if (!product) {
+                $("#productDetails").innerHTML = "";
+                panel.hidden = false;
+                $("#detailStatusTitle").textContent = "Product unavailable";
+                $("#detailStatusMessage").textContent = "This product may have been unpublished or removed.";
+                return;
+            }
+
+            panel.hidden = true;
+            const image = product.image_url
+                ? `<img src="${esc(product.image_url)}" alt="${esc(product.name)}" onerror="this.hidden=true">`
+                : `<div class="image-fallback">SMARTHOMZ<b>✳</b></div>`;
+
+            $("#productDetails").innerHTML = `
+        <div class="detail-image">${image}</div>
+        <div class="detail-copy">
+          <button class="button secondary" id="detailBack">← Back to products</button>
+          <div class="eyebrow">${esc(product.category || "Smart Living")}</div>
+          <h1>${esc(product.name)}</h1>
+          <p>${esc(product.description || "Product information will be added soon.")}</p>
+          <h3>Features</h3><ul>${listItems(product.features)}</ul>
+          <h3>Advantages</h3><ul>${listItems(product.pros)}</ul>
+          <h3>Things to consider</h3><ul>${listItems(product.cons)}</ul>
+        </div>`;
+
+            $("#detailBack").addEventListener("click", () => {
+                history.pushState({route: previousRoute}, "", "#" + previousRoute);
+                renderRoute(previousRoute, {restoreScroll: true});
+            });
+
+            $("#productDetails").classList.remove("detail-enter");
+            void $("#productDetails").offsetWidth;
+            $("#productDetails").classList.add("detail-enter");
+        }
+
+        $("#backToExplore").addEventListener("click", () => {
+            history.pushState({route: previousRoute}, "", "#" + previousRoute);
+            renderRoute(previousRoute, {restoreScroll: true});
+        });
+
+        const initialRoute = location.hash.slice(1);
+        renderRoute(routes.includes(initialRoute) ? initialRoute : "home", {fromPop: true});
+        loadProducts();
+    </script>
+</body>
+
+</html>
